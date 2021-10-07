@@ -1,0 +1,42 @@
+What is the transient keyword in Java?
+
+The transient keyword in Java is used to avoid serialization. If any object of a data structure is defined as a transient, then it will not be serialized.
+
+Serialization is the ​process of converting an object into a byte stream.
+
+In the code below, we have created a Member class object with a transient int id and a simple String name. Since the id is transient,​ it cannot be written in the file, so ​0 is stored instead.
+
+import java.io.Serializable; 
+import java.io.*;  
+
+class HelloWorld {
+
+    public static class  Member implements Serializable{
+        transient int id; // This will not serialized.
+        String name;
+        // constructor
+        public Member(int i, String k) {
+            this.id = i;
+            this.name = k;
+        }
+    }
+
+    public static void main(String args[]) throws Exception {
+        Member temp =new Member( 2, "Clausia");//creating object
+        //writing temp object into file
+        FileOutputStream fread=new FileOutputStream("member.txt");
+        ObjectOutputStream fout=new ObjectOutputStream(fread);
+        fout.writeObject(temp);
+        fout.flush();
+
+        fout.close();
+        fread.close();
+        System.out.println("Data successfully saved in a file");
+        
+        // retrieving the data from file.
+        ObjectInputStream fin=new ObjectInputStream(new FileInputStream("member.txt"));
+        Member membr=(Member)fin.readObject();
+        System.out.println(membr.id+" "+membr.name+" ");
+        fin.close();
+    }
+}
